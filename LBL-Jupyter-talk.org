@@ -1,0 +1,97 @@
+* Tech Dive Into Kubernetes + JupyterHub + JupyterLab at LSST
+* LSST
+** Feeds and Speeds
+** Notebook Environment ("nublado")
+* Fundamental assumptions
+** Kubernetes
+*** Good level of abstraction
+*** Containers are a good fit for what we need
+You don't have to run Docker as your container, but this talk is going
+to assume you do, because that's what we do
+*** Orchestrateable with Kustomize, Terraform, or Helm
+** JupyterHub
+Why write your own spawner?
+** JupyterLab
+No sense in starting, several years from Science First Light, with
+something that's already being supplanted.
+* Jupyter Configuration
+** RBAC
+Don't be afraid of RBAC.  It's not that bad.  Create service accounts,
+roles, and rolebindings for the capabilities your system needs (mostly
+the Hub, but not entirely).
+** Modular config files as ConfigMaps
+*** Examples
+*** Substitute values from secrets or environment
+*** ConfigMaps should be usable across sites.  If not, see above.
+** Make authentication someone else's problem
+This is one of the classical examples of "you really shouldn't do it
+yourself."
+*** OAuth2 is generally a very good solution
+*** We use JWT for SSO and it seems to work fine
+Some annotations in Nginx so if you don't have the right headers you're
+redirected through an OAuth flow, and then you get the right headers.
+*** The NCSA IDP for CILogon supports associated identities
+Once you set up your NCSA identity, you can link it to other
+CILogon-supported auth systems and use those (e.g. GitHub, SLAC,
+Caltech...) to do the OAuth flow.  You still get back the NCSA
+user/group info, but you can authenticate through another provider.
+*** Your authenticator should support a "group" concept.
+This makes data access (see below) and user capabilities easy to
+implement.
+** Make your spawner spawn each user's resources in a separate namespace
+*** Makes cleanup at logout a great deal easier
+*** Makes quota support easy
+*** Leverage groups to control quotas
+** Custom spawner page
+*** Leverage groups to control image, feature, or resource availability
+*** We're still investigating allowing multiple concurrent containers
+** Spawning user containers
+Basic trick is to pass user info into container at startup and do
+provisioning there.  You will probably need some privilege.
+*** ConfigMaps
+Define ConfigMaps (which are namespaced) at spawn time and map them into
+the Lab container, or...
+*** Complex environmental variables
+Set up gid/groupname mappings, uid/username, and parse in the shell on
+the far end...
+**** base64-encode the really complicated stuff
+But if you're finding you need to do that, maybe a ConfigMap is a better
+idea?
+** Persistent Storage
+This is why I recommend something with users and groups and a consistent
+and persistent way to assign uids/gids.
+*** File ownership and collaboration
+If UIDs/GIDs are globally consistent, this is just the Unix permissions
+model we have understood for 40 years.  You can do POSIX ACLs on many
+filesystems, too, if you need something more sopthisticated.
+*** NFS?
+Yes, _but_... It's slow, locking is a nightmare, and if you want to do
+non-default options you have to define your own pseudo-namespaced PV for
+each filesystem (PVs are not namespaced objects) and then hook a namespaced PVC up to
+it, and tear those down at logout (the PV, of course, isn't torn down
+with the namespace).
+*** HostPath
+"Get out of jail free."  But also more dangerous, and not officially
+supported for MultiWrite.  That said, GPFS seems to work for us, and it
+is much more performant than NFS-reexport-of-GPFS.
+** Intermediate-scale parallel processing
+*** Things too big to fit in a single Python process/cell
+*** But not so big you want to go with full-on HTCondor yet
+*** We use Dask in this realm; YMMV
+My expectation is that by the end of the survey, many things we would
+now go to a batch environment for will be reasonably doable in an
+interactive Dask-like framework.
+** Considerations for using Dask
+*** Keeping Python libraries and versions synced
+We cheat: your Dask workers are spawned from the same container image
+you're using, but with a different environmental flag set to say "be a
+Dask worker, not a JupyterLab server."
+*** Need additional Role/ServiceAccount/Rolebinding to allow Lab to spawn Dask
+We populate a Dask worker yml document at each login that does the right
+thing.  It's in your space so you can modify it, but...at your own risk
+and you're still subject to quotas.
+*** Resource limits can cause worker nodes to get reaped
+You still need to think more than you should have to about the size of
+the overall job and how you're partitioning it.  Easier than Spark
+though.
+
