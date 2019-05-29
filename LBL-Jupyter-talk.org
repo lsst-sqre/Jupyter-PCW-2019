@@ -1,97 +1,355 @@
+#+OPTIONS: toc:nil num:nil reveal_title_slide:nil
+#+REVEAL_HLEVEL: 2
+#+REVEAL_THEME: serif
 * Tech Dive Into Kubernetes + JupyterHub + JupyterLab at LSST
 * LSST
 ** Feeds and Speeds
+
+[[https://www.lsst.org/scientists/keynumbers][This]] is the usual overview of what the LSST is going to be doing, and
+how much of it there is.
+
 ** Notebook Environment ("nublado")
+
+This is the LSST Science Platform Interactive Notebook Component.
+Basically, it's a way of letting scientists quickly iterate through
+hypotheses looking for the ones interesting enough to burn a lot of
+resources investigating.
+
+My [[https://youtu.be/Xc0rUVznx1k?list=PL055Epbe6d5b572IRmYAHkUgcq3y6K3Ae][talk at JupyterCon last year]] ([[https://athornton.github.io/JupyterCon-2018-talk][slides]]) is not a bad overview,
+if I do say so myself.
+
 * Fundamental assumptions
-** Kubernetes
-*** Good level of abstraction
-*** Containers are a good fit for what we need
+** Kubernetes is the right level of abstraction
+
+*** Containerization
+
+We don't have to care about the vagaries of the underlying Linux
+distribution, much less the specifics of the hardware (or virtual hosts)
+or underlying network topology.
+
+**** Docker
+
 You don't have to run Docker as your container, but this talk is going
-to assume you do, because that's what we do
-*** Orchestrateable with Kustomize, Terraform, or Helm
+to assume you do, because that's what we do.
+
+#+REVEAL: split
+
+**** Singularity
+
+If and when Kubernetes gets the ability to talk to Singularity well,
+then maybe it's worth considering, but Singularity as usually deployed
+(that is, good old setuid for container setup) doesn't strike me as
+meaningfully more secure than Docker, and you lose the network
+namespace.
+
+I am very unconvinced that Singularity is a good answer to the "Docker
+on my HPC environment?  AW HELL NO!" issue.
+
+*** Composability
+
+Kubernetes abstractions (e.g. the service) are designed such that we can
+load-balance and (in some cases) get HA without having to work very hard
+at it.  The deployment manages container lifecycles so we have the right
+number of a given component running.  We don't have to manage the
+(miserable) Docker-container-port-to-host-port mapping stuff ourselves.
+
+This is where Kubernetes is magnificent.
+
+*** Ubiquity
+
+**** If you are not a data center service provider
+
+Demand your service provider give you a Kubernetes interface.  The major
+public clouds already do.
+
+**** If you are a data center service provider
+
+You either already do provide a managed Kubernetes service or you're
+going to have to.  The longer you wait the more it will hurt.
+
+*** Orchestrateable
+
+**** Kustomize
+
+Kustomize is now part of Kubernetes as of 1.14 and it looks like it will
+provide most of what we need.  I plan to port our deployment process to
+it soonish.
+
+**** Terraform
+
+Terraform is kind of heavyweight and has a learning curve, but does seem
+to work reasonably well.
+
+#+REVEAL: split
+
+**** Helm
+
+I just don't like Helm.  The templating is the easy part, and it doesn't
+help at all with sequencing, and Tiller doesn't play nice with RBAC.
+But Tiller is gone in Helm 3 (now in Alpha)...so maybe it's worth a
+revisit. 
+
 ** JupyterHub
-Why write your own spawner?
+
+Why write your own spawner?  I haven't heard a convincing reason.
+
 ** JupyterLab
+
 No sense in starting, several years from Science First Light, with
 something that's already being supplanted.
+
+You can still get the Classic Notebook view from it, if you have users
+with notebooks that rely on things JupyterLab doesn't have extensions
+for.  Encourage them to write those extensions or at least open issues.
+
 * Jupyter Configuration
 ** RBAC
+
 Don't be afraid of RBAC.  It's not that bad.  Create service accounts,
 roles, and rolebindings for the capabilities your system needs (mostly
 the Hub, but not entirely).
+
+[[https://github.com/lsst-sqre/nublado/tree/master/jupyterhub/kubernetes][This is an example]] for JupyterHub.
+
 ** Modular config files as ConfigMaps
 *** Examples
+
+This is a [[https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/jupyterhub_config/jupyterhub_config.py][JupyterHub minimal configuration wrapper]] that loads the (sorted)
+contents of a configuration directory.
+
+This is [[https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/sample_configs/30-environment.py][one of the files it loads.]]
+
 *** Substitute values from secrets or environment
-*** ConfigMaps should be usable across sites.  If not, see above.
+
+Let's look in a bit more detail at
+[[https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/sample_configs/30-environment.py][that file]].
+
+*** ConfigMaps should be usable across sites.
+
+If they are not, then you need to have more environmental variables or
+secrets, and set configuration variables from them.
+
 ** Make authentication someone else's problem
+
 This is one of the classical examples of "you really shouldn't do it
 yourself."
+
+Are you *really* such a special snowflake that "users are members of
+groups, and groups map to capabilities" won't work for you?
+
 *** OAuth2 is generally a very good solution
+
+Widely supported, good JupyterHub support, easy to add support for new
+providers by cargo-culting existing providers in JupyterHub...
+
+[[https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/sample_configs/10-authenticator.py][This]] is our configuration.
+
 *** We use JWT for SSO and it seems to work fine
-Some annotations in Nginx so if you don't have the right headers you're
-redirected through an OAuth flow, and then you get the right headers.
+
+Some [[https://github.com/lsst-sqre/nublado/blob/master/proxy/kubernetes/ingress.template.yml#L11][ingress annotations]] for Nginx so if you don't have the right
+headers you're redirected through an OAuth flow, and then you get the
+right headers.  [[https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/sample_configs/10-authenticator.py#L315][Validate and parse those headers]] when you receive them
+in the Hub, and you're done.
+
 *** The NCSA IDP for CILogon supports associated identities
+
 Once you set up your NCSA identity, you can link it to other
 CILogon-supported auth systems and use those (e.g. GitHub, SLAC,
 Caltech...) to do the OAuth flow.  You still get back the NCSA
 user/group info, but you can authenticate through another provider.
+
+If you're me and your computer has been on more than ten minutes you're
+probably authenticated to Google or GitHub already.
+
 *** Your authenticator should support a "group" concept.
+
 This makes data access (see below) and user capabilities easy to
-implement.
+implement.  A group, almost by definition, maps to a set of capabilities
+(although those capabilities are often not factored in a useful way).
+
 ** Make your spawner spawn each user's resources in a separate namespace
+
+Kubespawner now supports this directly (although we're using an earlier
+implementation until I have time to migrate us).
+
 *** Makes cleanup at logout a great deal easier
+
+There is some debate over whether destroying a namespace at logout is a
+good idea.  I vote for it: it's fast and easy to create namespaces, and
+destroying them destroys all namespaced resources so you can be a lot
+less careful on teardown.  (This gets particularly important if you're
+creating many user-specific ConfigMaps.)
+
 *** Makes quota support easy
+
+Set number of CPUs and amount of memory for the namespace.  You can also
+set object count quotas in modern Kubernetes, which gives you a huge
+amount of flexibility (at the expense of complexity).
+
 *** Leverage groups to control quotas
+
+This is why it's useful to conceptualize a group as a capability map.
+Some classes of users may be entitled to more resources than others.
+
 ** Custom spawner page
+
+[[https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/sample_configs/20-spawner.py#L90][Here]] is our (quite crude) implementation.
+
 *** Leverage groups to control image, feature, or resource availability
+
+We aren't actually doing this yet...but since we know the user and the
+user's groups at presenting-the-option-form time, we could do things
+like...
+
+#+REVEAL: split
+
+**** Allow a choice of different container images depending on the user group
+
+E.g. a courseware setting, where people in a "biology" group see the
+images with biology stacks, and those in an "astronomy" group see those
+with astronomy stacks.
+
+Or perhaps you show experimental builds only to users who have opted-in
+to the "living dangerously" group.
+
+#+REVEAL: split
+
+**** Allow different resource profiles to members of different groups
+
+We can control this at the namespace level too, but maybe only your
+"power users" should have access to the 25-core 100-GB container sizes.
+
+**** Choose CSS to do different skins for different groups
+
 *** We're still investigating allowing multiple concurrent containers
+
+If we keep our current namespace model, then each concurrent container
+(which might be a set of containers--see Dask below) would get its own
+namespace...
+
+Which means that we'd have to track aggregate consumption and enforce it
+at the Hub level.
+
 ** Spawning user containers
-Basic trick is to pass user info into container at startup and do
-provisioning there.  You will probably need some privilege.
+
+*** Be the User
+
+The basic trick is to pass user info into the spawned container at
+startup and [[https://github.com/lsst-sqre/nublado/tree/master/jupyterlab/prov][do provisioning there]].
+
+This probably requires some privilege (e.g. add a user to the container,
+and then sudo to the new user to start JupyterLab).
+
+...there are some ways around that, but the cure may be worse than the
+disease.
+
 *** ConfigMaps
+
 Define ConfigMaps (which are namespaced) at spawn time and map them into
-the Lab container, or...
+the user's Lab container, or...
+
 *** Complex environmental variables
+
 Set up gid/groupname mappings, uid/username, and parse in the shell on
 the far end...
+
+This is what we've been doing, and we've found we need to...
+
 **** base64-encode the really complicated stuff
-But if you're finding you need to do that, maybe a ConfigMap is a better
-idea?
+
+[[https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/sample_configs/20-spawner.py#L395][Here]] is how we do our initial Dask container template setup.
+
+If you're finding you need to do that, maybe a ConfigMap is a better
+idea?  We're going to be experimenting with that in the near future.
+
 ** Persistent Storage
-This is why I recommend something with users and groups and a consistent
-and persistent way to assign uids/gids.
+
+Presuming you have a concept of users and groups already, which you
+should, then you just need a consistent and persistent way to assign
+uids/gids.
+
+Your internal LDAP system probably already does this.  GitHub has unique
+32-bit identifiers for users and groups.
+
+Google has 64-bit identifiers so you're going to need your own mapping
+to make it 32 bits, which is important, because...
+
 *** File ownership and collaboration
+
 If UIDs/GIDs are globally consistent, this is just the Unix permissions
 model we have understood for 40 years.  You can do POSIX ACLs on many
-filesystems, too, if you need something more sopthisticated.
+filesystems, too, if you need something more sophisticated.  Modern
+Linux allows 32-bit values for each of these, which works nicely with
+GitHub, for instance.
+
 *** NFS?
+
 Yes, _but_... It's slow, locking is a nightmare, and if you want to do
 non-default options you have to define your own pseudo-namespaced PV for
 each filesystem (PVs are not namespaced objects) and then hook a namespaced PVC up to
 it, and tear those down at logout (the PV, of course, isn't torn down
 with the namespace).
+
+All this is doable--we do it--but it's a pain.
+
 *** HostPath
-"Get out of jail free."  But also more dangerous, and not officially
-supported for MultiWrite.  That said, GPFS seems to work for us, and it
-is much more performant than NFS-reexport-of-GPFS.
+
+"Get out of jail free."  But also more dangerous (that is, jails exist
+for a reason!), and not officially supported for MultiWrite.  That said,
+GPFS seems to work for us, and it is much more performant than
+NFS-reexport-of-GPFS.
+
 ** Intermediate-scale parallel processing
+
 *** Things too big to fit in a single Python process/cell
+
+Say, a handful of columns across a couple billion rows.
+[[https://github.com/lsst-sqre/notebook-demo/blob/master/experiments/DASK-notebooks/gaia_all_sky.ipynb][(GAIA DR2, "l" and "b" columns only)]]
+
 *** But not so big you want to go with full-on HTCondor yet
+
+For instance, the LSST DR11 final catalog size will be about 15PB.  If
+you're doing something that cuts across the whole catalog...at this
+point in history, you need a big batch system to do that.
+
 *** We use Dask in this realm; YMMV
+
 My expectation is that by the end of the survey, many things we would
 now go to a batch environment for will be reasonably doable in an
-interactive Dask-like framework.
+interactive Dask-like framework.  15PB of catalog data?  I doubt it,
+but...
+
 ** Considerations for using Dask
 *** Keeping Python libraries and versions synced
+
 We cheat: your Dask workers are spawned from the same container image
-you're using, but with a different environmental flag set to say "be a
+you're using, but with a [[https://github.com/lsst-sqre/nublado/blob/master/jupyterlab/runlab.sh#L135][different environmental flag]] set to say "be a
 Dask worker, not a JupyterLab server."
+
+This might not be a cheat.  If, like LSST, a lot of the bulk of your
+container is your particular complex analysis framework...this may
+be the sensible way to do it.
+
 *** Need additional Role/ServiceAccount/Rolebinding to allow Lab to spawn Dask
+
 We populate a Dask worker yml document at each login that does the right
 thing.  It's in your space so you can modify it, but...at your own risk
 and you're still subject to quotas.
-*** Resource limits can cause worker nodes to get reaped
-You still need to think more than you should have to about the size of
-the overall job and how you're partitioning it.  Easier than Spark
-though.
 
+#+REVEAL: split
+
+Note that if we move to a ConfigMap for this, rather than writing it
+from the environment, then it won't be directly modifiable, but you can
+always copy it from a read-only location to your own space and then use
+that modified copy as the source to spawn new containers from.
+
+We anticipate very few users will ever need this level of control.
+
+*** Resource limits can cause worker nodes to get reaped
+
+You still need to think more than you should have to about the size of
+the overall job and how you're partitioning it.
+
+Dask makes this a lot easier than, say, Apache Spark, though.
+
+* Questions
