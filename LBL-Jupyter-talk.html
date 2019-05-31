@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title></title>
+<title>Tech Dive Into Kubernetes + JupyterHub + JupyterLab at LSST</title>
 <meta name="author" content="(Adam Thornton)"/>
 <style type="text/css">
 .underline { text-decoration: underline; }
 </style>
 <link rel="stylesheet" href="./reveal.js/css/reveal.css"/>
 
-<link rel="stylesheet" href="./reveal.js/css/theme/serif.css" id="theme"/>
+<link rel="stylesheet" href="./reveal.js/css/theme/white.css" id="theme"/>
 
+<link rel="stylesheet" href="./local.css"/>
 
 <!-- If the query includes 'print-pdf', include the PDF print sheet -->
 <script>
@@ -26,21 +27,17 @@
 <body>
 <div class="reveal">
 <div class="slides">
-<section>
-<section id="slide-sec-">
-<h2 id="orga75b56a">Tech Dive Into Kubernetes + JupyterHub + JupyterLab at LSST</h2>
-</section>
+<section id="sec-title-slide"><h1 class="title">Tech Dive Into Kubernetes + JupyterHub + JupyterLab at LSST</h1><h2 class="author">Adam Thornton</h2><p class="date">Created: 2019-05-31 Fri 16:11</p>
 </section>
 <section>
 <section id="slide-sec-">
-<h2 id="org249e8f8">LSST</h2>
-<div class="outline-text-2" id="text-org249e8f8">
-</div>
-</section>
+<h2 id="org90adac0">LSST</h2>
+<div class="outline-text-2" id="text-org90adac0">
+</div></section>
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="orga6d3a5d">Feeds and Speeds</h3>
+<h3 id="org2e1cf41">Feeds and Speeds</h3>
 <p>
 <a href="https://www.lsst.org/scientists/keynumbers">This</a> is the usual overview of what the LSST is going to be doing, and
 how much of it there is.
@@ -50,7 +47,7 @@ how much of it there is.
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="orgd3131bb">Notebook Environment ("nublado")</h3>
+<h3 id="org7a9ce56">Notebook Environment ("nublado")</h3>
 <p>
 This is the LSST Science Platform Interactive Notebook Component.
 Basically, it's a way of letting scientists quickly iterate through
@@ -67,38 +64,32 @@ if I do say so myself.
 </section>
 <section>
 <section id="slide-sec-">
-<h2 id="org8157367">Fundamental assumptions</h2>
-<div class="outline-text-2" id="text-org8157367">
-</div>
-</section>
+<h2 id="orgb3749ed">Fundamental assumptions</h2>
+<div class="outline-text-2" id="text-orgb3749ed">
+</div></section>
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="org3b8be5b">Kubernetes is the right level of abstraction</h3>
-<div class="outline-text-3" id="text-org3b8be5b">
-</div>
-</section>
+<h3 id="org9179339">Kubernetes is the right level of abstraction</h3>
+<div class="outline-text-3" id="text-org9179339">
+</div></section>
 <section id="slide-sec-">
-<h4 id="org70024d1">Containerization</h4>
+<h4 id="org1f265a0">Containerization</h4>
 <p>
 We don't have to care about the vagaries of the underlying Linux
 distribution, much less the specifics of the hardware (or virtual hosts)
 or underlying network topology.
 </p>
 
-<ul class="org-ul">
-<li><a id="org38218ab"></a>Docker<br />
-<p>
+<ul class="org-ul"><li><a id="orgaa1c28e"></a>Docker<br /><p>
 You don't have to run Docker as your container, but this talk is going
 to assume you do, because that's what we do.
 </p>
 
 </section>
-<section >
-</li>
+<section ></li>
 
-<li><a id="org1a222e5"></a>Singularity<br />
-<p>
+<li><a id="org246d91b"></a>Singularity<br /><p>
 If and when Kubernetes gets the ability to talk to Singularity well,
 then maybe it's worth considering, but Singularity as usually deployed
 (that is, good old setuid for container setup) doesn't strike me as
@@ -109,13 +100,11 @@ namespace.
 <p>
 I am very unconvinced that Singularity is a good answer to the "Docker
 on my HPC environment?  AW HELL NO!" issue.
-</p>
-</li>
-</ul>
+</p></li></ul>
 
 </section>
 <section id="slide-sec-">
-<h4 id="org9efe56b">Composability</h4>
+<h4 id="org3c0c5ef">Composability</h4>
 <p>
 Kubernetes abstractions (e.g. the service) are designed such that we can
 load-balance and (in some cases) get HA without having to work very hard
@@ -130,64 +119,48 @@ This is where Kubernetes is magnificent.
 
 </section>
 <section id="slide-sec-">
-<h4 id="org2420fcb">Ubiquity</h4>
-<div class="outline-text-4" id="text-org2420fcb">
-</div>
-<ul class="org-ul">
-<li><a id="org535c0a8"></a>If you are not a data center service provider<br />
-<p>
+<h4 id="org2d22588">Ubiquity</h4>
+<div class="outline-text-4" id="text-org2d22588">
+</div><ul class="org-ul"><li><a id="org800d476"></a>If you are not a data center service provider<br /><p>
 Demand your service provider give you a Kubernetes interface.  The major
 public clouds already do.
-</p>
-</li>
+</p></li>
 
-<li><a id="org5129e38"></a>If you are a data center service provider<br />
-<p>
+<li><a id="org1ffcd53"></a>If you are a data center service provider<br /><p>
 You either already do provide a managed Kubernetes service or you're
 going to have to.  The longer you wait the more it will hurt.
-</p>
-</li>
-</ul>
+</p></li></ul>
 
 </section>
 <section id="slide-sec-">
-<h4 id="orgdd6e75d">Orchestrateable</h4>
-<div class="outline-text-4" id="text-orgdd6e75d">
-</div>
-<ul class="org-ul">
-<li><a id="orge32fd6a"></a>Kustomize<br />
-<p>
+<h4 id="orgd341207">Orchestrateable</h4>
+<div class="outline-text-4" id="text-orgd341207">
+</div><ul class="org-ul"><li><a id="org2bcb9e6"></a>Kustomize<br /><p>
 Kustomize is now part of Kubernetes as of 1.14 and it looks like it will
 provide most of what we need.  I plan to port our deployment process to
 it soonish.
-</p>
-</li>
+</p></li>
 
-<li><a id="org89b5cca"></a>Terraform<br />
-<p>
+<li><a id="orgd77bc92"></a>Terraform<br /><p>
 Terraform is kind of heavyweight and has a learning curve, but does seem
 to work reasonably well.
 </p>
 
 </section>
-<section >
-</li>
+<section ></li>
 
-<li><a id="org3f505fb"></a>Helm<br />
-<p>
+<li><a id="orgba9da97"></a>Helm<br /><p>
 I just don't like Helm.  The templating is the easy part, and it doesn't
 help at all with sequencing, and Tiller doesn't play nice with RBAC.
 But Tiller is gone in Helm 3 (now in Alpha)&#x2026;so maybe it's worth a
 revisit. 
-</p>
-</li>
-</ul>
+</p></li></ul>
 
 </section>
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="org0cd59cc">JupyterHub</h3>
+<h3 id="orge408b86">JupyterHub</h3>
 <p>
 Why write your own spawner?  I haven't heard a convincing reason.
 </p>
@@ -196,7 +169,7 @@ Why write your own spawner?  I haven't heard a convincing reason.
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="org65b2e24">JupyterLab</h3>
+<h3 id="org8daf28d">JupyterLab</h3>
 <p>
 No sense in starting, several years from Science First Light, with
 something that's already being supplanted.
@@ -212,14 +185,13 @@ for.  Encourage them to write those extensions or at least open issues.
 </section>
 <section>
 <section id="slide-sec-">
-<h2 id="org63f6523">Jupyter Configuration</h2>
-<div class="outline-text-2" id="text-org63f6523">
-</div>
-</section>
+<h2 id="orgc650ff2">Jupyter Configuration</h2>
+<div class="outline-text-2" id="text-orgc650ff2">
+</div></section>
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="org5d8272f">RBAC</h3>
+<h3 id="org6ed3f35">RBAC</h3>
 <p>
 Don't be afraid of RBAC.  It's not that bad.  Create service accounts,
 roles, and rolebindings for the capabilities your system needs (mostly
@@ -234,12 +206,11 @@ the Hub, but not entirely).
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="org0e0c6fe">Modular config files as ConfigMaps</h3>
-<div class="outline-text-3" id="text-org0e0c6fe">
-</div>
-</section>
+<h3 id="orgb81d260">Modular config files as ConfigMaps</h3>
+<div class="outline-text-3" id="text-orgb81d260">
+</div></section>
 <section id="slide-sec-">
-<h4 id="org5ab46d6">Examples</h4>
+<h4 id="org6f3012d">Examples</h4>
 <p>
 This is a <a href="https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/jupyterhub_config/jupyterhub_config.py">JupyterHub minimal configuration wrapper</a> that loads the (sorted)
 contents of a configuration directory.
@@ -251,7 +222,7 @@ This is <a href="https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/sam
 
 </section>
 <section id="slide-sec-">
-<h4 id="org7e59104">Substitute values from secrets or environment</h4>
+<h4 id="org2963e1a">Substitute values from secrets or environment</h4>
 <p>
 Let's look in a bit more detail at
 <a href="https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/sample_configs/30-environment.py">that file</a>.
@@ -259,7 +230,7 @@ Let's look in a bit more detail at
 
 </section>
 <section id="slide-sec-">
-<h4 id="org7c7d228">ConfigMaps should be usable across sites.</h4>
+<h4 id="org6b5bfa8">ConfigMaps should be usable across sites.</h4>
 <p>
 If they are not, then you need to have more environmental variables or
 secrets, and set configuration variables from them.
@@ -269,7 +240,7 @@ secrets, and set configuration variables from them.
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="orgb908996">Make authentication someone else's problem</h3>
+<h3 id="org1a1071c">Make authentication someone else's problem</h3>
 <p>
 This is one of the classical examples of "you really shouldn't do it
 yourself."
@@ -282,7 +253,7 @@ groups, and groups map to capabilities" won't work for you?
 
 </section>
 <section id="slide-sec-">
-<h4 id="orgbc080ef">OAuth2 is generally a very good solution</h4>
+<h4 id="org7ccf3f2">OAuth2 is generally a very good solution</h4>
 <p>
 Widely supported, good JupyterHub support, easy to add support for new
 providers by cargo-culting existing providers in JupyterHub&#x2026;
@@ -294,7 +265,7 @@ providers by cargo-culting existing providers in JupyterHub&#x2026;
 
 </section>
 <section id="slide-sec-">
-<h4 id="org84fa87a">We use JWT for SSO and it seems to work fine</h4>
+<h4 id="org41c9921">We use JWT for SSO and it seems to work fine</h4>
 <p>
 Some <a href="https://github.com/lsst-sqre/nublado/blob/master/proxy/kubernetes/ingress.template.yml#L11">ingress annotations</a> for Nginx so if you don't have the right
 headers you're redirected through an OAuth flow, and then you get the
@@ -304,7 +275,7 @@ in the Hub, and you're done.
 
 </section>
 <section id="slide-sec-">
-<h4 id="org329f27e">The NCSA IDP for CILogon supports associated identities</h4>
+<h4 id="org11296b5">The NCSA IDP for CILogon supports associated identities</h4>
 <p>
 Once you set up your NCSA identity, you can link it to other
 CILogon-supported auth systems and use those (e.g. GitHub, SLAC,
@@ -319,7 +290,7 @@ probably authenticated to Google or GitHub already.
 
 </section>
 <section id="slide-sec-">
-<h4 id="orgc7d8114">Your authenticator should support a "group" concept.</h4>
+<h4 id="orgf36abfb">Your authenticator should support a "group" concept.</h4>
 <p>
 This makes data access (see below) and user capabilities easy to
 implement.  A group, almost by definition, maps to a set of capabilities
@@ -330,7 +301,7 @@ implement.  A group, almost by definition, maps to a set of capabilities
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="orgd8683bf">Make your spawner spawn each user's resources in a separate namespace</h3>
+<h3 id="org80893be">Make your spawner spawn each user's resources in a separate namespace</h3>
 <p>
 Kubespawner now supports this directly (although we're using an earlier
 implementation until I have time to migrate us).
@@ -338,7 +309,7 @@ implementation until I have time to migrate us).
 
 </section>
 <section id="slide-sec-">
-<h4 id="org5b2bd22">Makes cleanup at logout a great deal easier</h4>
+<h4 id="org83c78fd">Makes cleanup at logout a great deal easier</h4>
 <p>
 There is some debate over whether destroying a namespace at logout is a
 good idea.  I vote for it: it's fast and easy to create namespaces, and
@@ -349,7 +320,7 @@ creating many user-specific ConfigMaps.)
 
 </section>
 <section id="slide-sec-">
-<h4 id="orgccf28d1">Makes quota support easy</h4>
+<h4 id="orgfc0b5d6">Makes quota support easy</h4>
 <p>
 Set number of CPUs and amount of memory for the namespace.  You can also
 set object count quotas in modern Kubernetes, which gives you a huge
@@ -358,7 +329,7 @@ amount of flexibility (at the expense of complexity).
 
 </section>
 <section id="slide-sec-">
-<h4 id="orga376947">Leverage groups to control quotas</h4>
+<h4 id="org470aa57">Leverage groups to control quotas</h4>
 <p>
 This is why it's useful to conceptualize a group as a capability map.
 Some classes of users may be entitled to more resources than others.
@@ -368,14 +339,14 @@ Some classes of users may be entitled to more resources than others.
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="orgb04a621">Custom spawner page</h3>
+<h3 id="org55afaf4">Custom spawner page</h3>
 <p>
 <a href="https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/sample_configs/20-spawner.py#L90">Here</a> is our (quite crude) implementation.
 </p>
 
 </section>
 <section id="slide-sec-">
-<h4 id="org1ab932b">Leverage groups to control image, feature, or resource availability</h4>
+<h4 id="org956150f">Leverage groups to control image, feature, or resource availability</h4>
 <p>
 We aren't actually doing this yet&#x2026;but since we know the user and the
 user's groups at presenting-the-option-form time, we could do things
@@ -385,9 +356,7 @@ like&#x2026;
 </section>
 <section >
 
-<ul class="org-ul">
-<li><a id="orgb9a4465"></a>Allow a choice of different container images depending on the user group<br />
-<p>
+<ul class="org-ul"><li><a id="org3bdac20"></a>Allow a choice of different container images depending on the user group<br /><p>
 E.g. a courseware setting, where people in a "biology" group see the
 images with biology stacks, and those in an "astronomy" group see those
 with astronomy stacks.
@@ -399,22 +368,18 @@ to the "living dangerously" group.
 </p>
 
 </section>
-<section >
-</li>
+<section ></li>
 
-<li><a id="org1763cc5"></a>Allow different resource profiles to members of different groups<br />
-<p>
+<li><a id="org27a8002"></a>Allow different resource profiles to members of different groups<br /><p>
 We can control this at the namespace level too, but maybe only your
 "power users" should have access to the 25-core 100-GB container sizes.
-</p>
-</li>
+</p></li>
 
-<li><a id="org467e1b2"></a>Choose CSS to do different skins for different groups<br /></li>
-</ul>
+<li><a id="org437c2ac"></a>Choose CSS to do different skins for different groups<br /></li></ul>
 
 </section>
 <section id="slide-sec-">
-<h4 id="org88de26b">We're still investigating allowing multiple concurrent containers</h4>
+<h4 id="orge46a3ec">We're still investigating allowing multiple concurrent containers</h4>
 <p>
 If we keep our current namespace model, then each concurrent container
 (which might be a set of containers&#x2013;see Dask below) would get its own
@@ -430,12 +395,11 @@ at the Hub level.
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="orgcdd6106">Spawning user containers</h3>
-<div class="outline-text-3" id="text-orgcdd6106">
-</div>
-</section>
+<h3 id="org780cc49">Spawning user containers</h3>
+<div class="outline-text-3" id="text-org780cc49">
+</div></section>
 <section id="slide-sec-">
-<h4 id="org0d2fb23">Be the User</h4>
+<h4 id="orgce5be7b">Be the User</h4>
 <p>
 The basic trick is to pass user info into the spawned container at
 startup and <a href="https://github.com/lsst-sqre/nublado/tree/master/jupyterlab/prov">do provisioning there</a>.
@@ -453,7 +417,7 @@ disease.
 
 </section>
 <section id="slide-sec-">
-<h4 id="orgbd2d90c">ConfigMaps</h4>
+<h4 id="org79183e1">ConfigMaps</h4>
 <p>
 Define ConfigMaps (which are namespaced) at spawn time and map them into
 the user's Lab container, or&#x2026;
@@ -461,7 +425,7 @@ the user's Lab container, or&#x2026;
 
 </section>
 <section id="slide-sec-">
-<h4 id="org9b55a57">Complex environmental variables</h4>
+<h4 id="org36a3b56">Complex environmental variables</h4>
 <p>
 Set up gid/groupname mappings, uid/username, and parse in the shell on
 the far end&#x2026;
@@ -471,24 +435,20 @@ the far end&#x2026;
 This is what we've been doing, and we've found we need to&#x2026;
 </p>
 
-<ul class="org-ul">
-<li><a id="org6c7a837"></a>base64-encode the really complicated stuff<br />
-<p>
+<ul class="org-ul"><li><a id="orgd013668"></a>base64-encode the really complicated stuff<br /><p>
 <a href="https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/sample_configs/20-spawner.py#L395">Here</a> is how we do our initial Dask container template setup.
 </p>
 
 <p>
 If you're finding you need to do that, maybe a ConfigMap is a better
 idea?  We're going to be experimenting with that in the near future.
-</p>
-</li>
-</ul>
+</p></li></ul>
 
 </section>
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="org194147f">Persistent Storage</h3>
+<h3 id="orgd8e63d1">Persistent Storage</h3>
 <p>
 Presuming you have a concept of users and groups already, which you
 should, then you just need a consistent and persistent way to assign
@@ -507,7 +467,7 @@ to make it 32 bits, which is important, because&#x2026;
 
 </section>
 <section id="slide-sec-">
-<h4 id="orgda5aaea">File ownership and collaboration</h4>
+<h4 id="orgfc473fd">File ownership and collaboration</h4>
 <p>
 If UIDs/GIDs are globally consistent, this is just the Unix permissions
 model we have understood for 40 years.  You can do POSIX ACLs on many
@@ -518,7 +478,7 @@ GitHub, for instance.
 
 </section>
 <section id="slide-sec-">
-<h4 id="orgb2f9674">NFS?</h4>
+<h4 id="orgd4c3734">NFS?</h4>
 <p>
 Yes, <span class="underline">but</span>&#x2026; It's slow, locking is a nightmare, and if you want to do
 non-default options you have to define your own pseudo-namespaced PV for
@@ -533,7 +493,7 @@ All this is doable&#x2013;we do it&#x2013;but it's a pain.
 
 </section>
 <section id="slide-sec-">
-<h4 id="orgae0dd32">HostPath</h4>
+<h4 id="orgebf810f">HostPath</h4>
 <p>
 "Get out of jail free."  But also more dangerous (that is, jails exist
 for a reason!), and not officially supported for MultiWrite.  That said,
@@ -545,12 +505,11 @@ NFS-reexport-of-GPFS.
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="orge69d51f">Intermediate-scale parallel processing</h3>
-<div class="outline-text-3" id="text-orge69d51f">
-</div>
-</section>
+<h3 id="org4392c3f">Intermediate-scale parallel processing</h3>
+<div class="outline-text-3" id="text-org4392c3f">
+</div></section>
 <section id="slide-sec-">
-<h4 id="org2fc0a7c">Things too big to fit in a single Python process/cell</h4>
+<h4 id="org6c77545">Things too big to fit in a single Python process/cell</h4>
 <p>
 Say, a handful of columns across a couple billion rows.
 <a href="https://github.com/lsst-sqre/notebook-demo/blob/master/experiments/DASK-notebooks/gaia_all_sky.ipynb">(GAIA DR2, "l" and "b" columns only)</a>
@@ -558,7 +517,7 @@ Say, a handful of columns across a couple billion rows.
 
 </section>
 <section id="slide-sec-">
-<h4 id="org8b26555">But not so big you want to go with full-on HTCondor yet</h4>
+<h4 id="org38de819">But not so big you want to go with full-on HTCondor yet</h4>
 <p>
 For instance, the LSST DR11 final catalog size will be about 15PB.  If
 you're doing something that cuts across the whole catalog&#x2026;at this
@@ -567,7 +526,7 @@ point in history, you need a big batch system to do that.
 
 </section>
 <section id="slide-sec-">
-<h4 id="orgeb18904">We use Dask in this realm; YMMV</h4>
+<h4 id="org818798c">We use Dask in this realm; YMMV</h4>
 <p>
 My expectation is that by the end of the survey, many things we would
 now go to a batch environment for will be reasonably doable in an
@@ -579,12 +538,11 @@ but&#x2026;
 </section>
 <section>
 <section id="slide-sec-">
-<h3 id="orgf076098">Considerations for using Dask</h3>
-<div class="outline-text-3" id="text-orgf076098">
-</div>
-</section>
+<h3 id="org94e40e3">Considerations for using Dask</h3>
+<div class="outline-text-3" id="text-org94e40e3">
+</div></section>
 <section id="slide-sec-">
-<h4 id="org3cc36d4">Keeping Python libraries and versions synced</h4>
+<h4 id="org960aedb">Keeping Python libraries and versions synced</h4>
 <p>
 We cheat: your Dask workers are spawned from the same container image
 you're using, but with a <a href="https://github.com/lsst-sqre/nublado/blob/master/jupyterlab/runlab.sh#L135">different environmental flag</a> set to say "be a
@@ -599,7 +557,7 @@ be the sensible way to do it.
 
 </section>
 <section id="slide-sec-">
-<h4 id="org50abdde">Need additional Role/ServiceAccount/Rolebinding to allow Lab to spawn Dask</h4>
+<h4 id="org9789227">Need additional Role/ServiceAccount/Rolebinding to allow Lab to spawn Dask</h4>
 <p>
 We populate a Dask worker yml document at each login that does the right
 thing.  It's in your space so you can modify it, but&#x2026;at your own risk
@@ -622,7 +580,7 @@ We anticipate very few users will ever need this level of control.
 
 </section>
 <section id="slide-sec-">
-<h4 id="orgbc2d104">Resource limits can cause worker nodes to get reaped</h4>
+<h4 id="org61cec67">Resource limits can cause worker nodes to get reaped</h4>
 <p>
 You still need to think more than you should have to about the size of
 the overall job and how you're partitioning it.
@@ -636,7 +594,7 @@ Dask makes this a lot easier than, say, Apache Spark, though.
 </section>
 <section>
 <section id="slide-sec-">
-<h2 id="org7d4ad25">Questions</h2>
+<h2 id="orge1f1d11">Questions</h2>
 </section>
 </section>
 </div>

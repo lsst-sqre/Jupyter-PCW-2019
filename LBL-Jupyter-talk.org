@@ -1,7 +1,10 @@
-#+OPTIONS: toc:nil num:nil reveal_title_slide:nil
+#+OPTIONS: toc:nil num:nil
 #+REVEAL_HLEVEL: 2
-#+REVEAL_THEME: serif
-* Tech Dive Into Kubernetes + JupyterHub + JupyterLab at LSST
+#+REVEAL_THEME: white
+#+REVEAL_EXTRA_CSS: ./local.css
+#+AUTHOR: Adam Thornton
+#+EMAIL: athornton@lsst.org
+#+TITLE: Tech Dive Into Kubernetes + JupyterHub + JupyterLab at LSST
 * LSST
 ** Feeds and Speeds
 
