@@ -13,7 +13,7 @@
 [[https://www.lsst.org/scientists/keynumbers][This]] is the usual overview of what the LSST is going to be doing, and
 how much of it there is.
 
-** Notebook Environment ("nublado")
+** Notebook Environment (AKA "nublado")
 
 This is the LSST Science Platform Interactive Notebook Component.
 Basically, it's a way of letting scientists quickly iterate through
@@ -331,5 +331,12 @@ Works, ubiquitous, _but_...
 + Jails exist for reasons.
 + Not officially supported for ReadWriteMany.
 + GPFS seems to work for us, with good performance, but YMMV.
+
+* Links
+
+[[https://github.com/lsst-sqre/Jupyter-PCW-2019.git][This talk]].
+
+The [[https://github.com/lsst-sqre/nublado.git][Notebook Aspect of the LSST Science Platform]], where all the
+examples are from.
 
 * Questions
