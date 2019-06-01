@@ -7,6 +7,14 @@
 #+EMAIL: athornton@lsst.org
 #+TITLE: Tech Dive: Jupyter at LSST
 #+DATE: 
+* Links
+
+[[https://github.com/lsst-sqre/Jupyter-PCW-2019.git][This talk]].
+
+[[https://athornton.github.io/Jupyter-PCW-2019][This talk, rendered]].
+
+The [[https://github.com/lsst-sqre/nublado.git][Notebook Aspect of the LSST Science Platform]], where all the
+examples are from.
 * LSST
 ** Feeds and Speeds
 
@@ -331,14 +339,5 @@ Works, ubiquitous, _but_...
 + Jails exist for reasons.
 + Not officially supported for ReadWriteMany.
 + GPFS seems to work for us, with good performance, but YMMV.
-
-* Links
-
-[[https://github.com/lsst-sqre/Jupyter-PCW-2019.git][This talk]].
-
-[[https://athornton.github.io/Jupyter-PCW-2019][This talk, rendered]].
-
-The [[https://github.com/lsst-sqre/nublado.git][Notebook Aspect of the LSST Science Platform]], where all the
-examples are from.
 
 * Questions
