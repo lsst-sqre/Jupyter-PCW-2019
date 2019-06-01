@@ -100,9 +100,9 @@ for.  Encourage them to write those extensions or at least open issues.
 
 ** Authentication
 
-*** Make it someone else's problem.
+*** Make it someone else's problem
 
-It's full of corner cases.
+It's full of corner cases and harder than it looks.
 
 Are you *really* such a special snowflake that "users are members of
 groups, and groups map to capabilities" won't work for you?
