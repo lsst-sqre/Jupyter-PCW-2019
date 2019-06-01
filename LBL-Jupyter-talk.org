@@ -280,6 +280,11 @@ You can use groups to control what's displayed.
 Pass information into the user container and do user setup as a
 semiprivileged user with tightly controlled sudo.
 
+Then start the JupyterLab server as the user, in the user's home
+directory.
+
+Do not give any sudo privileges to the user.
+
 #+REVEAL: split
 
 **** Complex environmental variables
