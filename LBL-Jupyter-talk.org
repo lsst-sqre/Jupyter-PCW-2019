@@ -118,9 +118,6 @@ Wide support, good JupyterHub support, easy to add new providers.
 Custom header checking/injection in an Nginx ingress with a diversion
 through OAuth2 flow, followed by passing around JWT.
 
-Check headers at the landing page, if they're not there, redirect via an
-Nginx ingress through an OAuth2 auth flow, pass around JWT thereafter.
-
 Our [[https://github.com/lsst-sqre/nublado/blob/master/proxy/kubernetes/ingress.template.yml#L11][ingress annotations]] and [[https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/sample_configs/10-authenticator.py#L315][header validation and parsing]].
 
 *** Better SSO
