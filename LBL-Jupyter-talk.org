@@ -336,6 +336,8 @@ Works, ubiquitous, _but_...
 
 [[https://github.com/lsst-sqre/Jupyter-PCW-2019.git][This talk]].
 
+[[https://athornton.github.io/Jupyter-PCW-2019][This talk, rendered]].
+
 The [[https://github.com/lsst-sqre/nublado.git][Notebook Aspect of the LSST Science Platform]], where all the
 examples are from.
 
