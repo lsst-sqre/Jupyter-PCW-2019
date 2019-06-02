@@ -328,7 +328,8 @@ Works, ubiquitous, _but_...
 
 + Performance
 + Locking
-+ Non-default options in Kubernetes requires hacky workarounds
++ The use of non-default NFS options in Kubernetes requires hacky
+  workarounds
 
 #+REVEAL: split
 
