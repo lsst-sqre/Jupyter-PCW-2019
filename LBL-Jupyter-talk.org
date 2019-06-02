@@ -171,7 +171,7 @@ This can take a very long time to pull.
 
 **** Prepuller
 
-Run something to continually pull some set of versions of your standard
+Run [[https://github.com/lsst-sqre/nublado/tree/master/prepuller][something]] to continually pull some set of versions of your standard
 images.  Couple with a CI system and by the time people show up in the
 morning, the new image is pulled.
 
@@ -246,8 +246,6 @@ It's not that scary.
 
 [[https://github.com/lsst-sqre/nublado/tree/master/jupyterhub/kubernetes][This is an example]] for JupyterHub.
 
-
-
 ** Configuration
 
 *** Modularity with ConfigMaps
@@ -311,7 +309,7 @@ the user's Lab container as read-only files.
 
 You just need a consistent and persistent way to assign uids/gids.
 
-Your LDAP system should already this.  GitHub has unique 32-bit
+Your LDAP system should already do this.  GitHub has unique 32-bit
 identifiers for users and groups.  Google will require you to map 64-bit
 IDs to 32-bit.
 
@@ -343,3 +341,12 @@ Works, ubiquitous, _but_...
 + GPFS seems to work for us, with good performance, but YMMV.
 
 * Questions
+
+[[https://github.com/lsst-sqre/Jupyter-PCW-2019.git][This talk]].
+
+[[https://athornton.github.io/Jupyter-PCW-2019][This talk, rendered]].
+
+[[https://github.com/lsst-sqre/nublado.git][Notebook Aspect of the LSST Science Platform]] (example source).
+
+Adam Thornton, athornton@lsst.org
+
