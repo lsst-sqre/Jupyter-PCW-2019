@@ -9,12 +9,13 @@
 #+DATE: 
 * Links
 
-[[https://github.com/lsst-sqre/Jupyter-PCW-2019.git][This talk]].
+[[https://github.com/lsst-sqre/Jupyter-PCW-2019.git][This talk]]: https://github.com/lsst-sqre/Jupyter-PCW-2019.git.
 
-[[https://athornton.github.io/Jupyter-PCW-2019][This talk, rendered]].
+[[https://athornton.github.io/Jupyter-PCW-2019][This talk, rendered]]: https://athornton.github.io/Jupyter-PCW-2019.
 
-The [[https://github.com/lsst-sqre/nublado.git][Notebook Aspect of the LSST Science Platform]], where all the
-examples are from.
+The [[https://github.com/lsst-sqre/nublado.git][Notebook Aspect of the LSST Science Platform]]:
+https://github.com/lsst-sqre/nublado.git (example sources).
+
 * LSST
 ** Feeds and Speeds
 
@@ -30,7 +31,6 @@ resources investigating.
 
 My [[https://youtu.be/Xc0rUVznx1k?list=PL055Epbe6d5b572IRmYAHkUgcq3y6K3Ae][talk at JupyterCon 2018]] ([[https://athornton.github.io/JupyterCon-2018-talk][slides]]) is not a bad overview, if I do say
 so myself.
-
 * Fundamental assumptions
 
 ** Kubernetes is the right level of abstraction
@@ -342,11 +342,12 @@ Works, ubiquitous, _but_...
 
 * Questions
 
-[[https://github.com/lsst-sqre/Jupyter-PCW-2019.git][This talk]].
+[[https://github.com/lsst-sqre/Jupyter-PCW-2019.git][This talk]]: https://github.com/lsst-sqre/Jupyter-PCW-2019.git.
 
-[[https://athornton.github.io/Jupyter-PCW-2019][This talk, rendered]].
+[[https://athornton.github.io/Jupyter-PCW-2019][This talk, rendered]]: https://athornton.github.io/Jupyter-PCW-2019.
 
-[[https://github.com/lsst-sqre/nublado.git][Notebook Aspect of the LSST Science Platform]] (example source).
+The [[https://github.com/lsst-sqre/nublado.git][Notebook Aspect of the LSST Science Platform]]:
+https://github.com/lsst-sqre/nublado.git (example sources).
 
-Adam Thornton, athornton@lsst.org
+Adam Thornton <athornton@lsst.org>
 
