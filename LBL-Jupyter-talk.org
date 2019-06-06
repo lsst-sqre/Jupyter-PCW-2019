@@ -16,6 +16,12 @@
 The [[https://github.com/lsst-sqre/nublado.git][Notebook Aspect of the LSST Science Platform]]:
 https://github.com/lsst-sqre/nublado.git (example sources).
 
+* Overview
+
++ LSST: What and Why
++ Architecture: Kubernetes + JupyterHub + JupyterLab
++ Specific Implementation Challenges and Solutions
+
 * LSST
 ** Feeds and Speeds
 
@@ -31,7 +37,7 @@ resources investigating.
 
 My [[https://youtu.be/Xc0rUVznx1k?list=PL055Epbe6d5b572IRmYAHkUgcq3y6K3Ae][talk at JupyterCon 2018]] ([[https://athornton.github.io/JupyterCon-2018-talk][slides]]) is not a bad overview, if I do say
 so myself.
-* Fundamental assumptions
+* Architectural assumptions
 
 ** Kubernetes is the right level of abstraction
 
@@ -91,7 +97,7 @@ You can still get the Classic Notebook view from it, if you have users
 with notebooks that rely on things JupyterLab doesn't have extensions
 for.  Encourage them to write those extensions or at least open issues.
 
-* Jupyter Configuration
+* Implementation Challenges and Solutions
 
 1. Authentication
 2. Resource Control
