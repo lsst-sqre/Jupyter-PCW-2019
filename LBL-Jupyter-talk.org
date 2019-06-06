@@ -120,6 +120,8 @@ through OAuth2 flow, followed by passing around JWT.
 
 Our [[https://github.com/lsst-sqre/nublado/blob/master/proxy/kubernetes/ingress.template.yml#L11][ingress annotations]] and [[https://github.com/lsst-sqre/nublado/blob/master/jupyterhub/sample_configs/10-authenticator.py#L315][header validation and parsing]].
 
+Note that Node.js has a default maximum header size of 8KB.
+
 *** Better SSO
 
 CILogon+NCSA IDP supports association of identities, which is a nice
