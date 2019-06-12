@@ -7,15 +7,6 @@
 #+EMAIL: athornton@lsst.org
 #+TITLE: Tech Dive: Jupyter at LSST
 #+DATE: 
-* Links
-
-[[https://github.com/lsst-sqre/Jupyter-PCW-2019.git][This talk]]: https://github.com/lsst-sqre/Jupyter-PCW-2019.git.
-
-[[https://athornton.github.io/Jupyter-PCW-2019][This talk, rendered]]: https://athornton.github.io/Jupyter-PCW-2019.
-
-The [[https://github.com/lsst-sqre/nublado.git][Notebook Aspect of the LSST Science Platform]]:
-https://github.com/lsst-sqre/nublado.git (example sources).
-
 * Overview
 
 + LSST: What and Why
@@ -349,14 +340,29 @@ Works, ubiquitous, _but_...
 + Not officially supported for ReadWriteMany.
 + GPFS seems to work for us, with good performance, but YMMV.
 
-* Questions
+* Links
+** This Talk
+[[https://github.com/lsst-sqre/Jupyter-PCW-2019.git][
+This talk (source)]]: https://github.com/lsst-sqre/Jupyter-PCW-2019.git.
 
-[[https://github.com/lsst-sqre/Jupyter-PCW-2019.git][This talk]]: https://github.com/lsst-sqre/Jupyter-PCW-2019.git.
+[[https://athornton.github.io/Jupyter-PCW-2019][This talk]]: https://athornton.github.io/Jupyter-PCW-2019.
 
-[[https://athornton.github.io/Jupyter-PCW-2019][This talk, rendered]]: https://athornton.github.io/Jupyter-PCW-2019.
+** Useful Repositories
 
 The [[https://github.com/lsst-sqre/nublado.git][Notebook Aspect of the LSST Science Platform]]:
 https://github.com/lsst-sqre/nublado.git (example sources).
+
+[[https://github.com/lsst-sqre/jupyterhubutils][LSST JupyterHub Utilities]]:
+https://github.com/lsst-sqre/jupyterhubutils (prepuller and
+reposcanner).
+
+[[https://github.com/lsst-sqre/jupyterlabutils][LSST JupyterLab Utilities]]:
+https://github.com/lsst-sqre/jupyterlabutils (Dask cluster proxy for use
+in Kubernetes).
+
+* Questions
+
+[[https://athornton.github.io/Jupyter-PCW-2019][This talk]]: https://athornton.github.io/Jupyter-PCW-2019.
 
 Adam Thornton <athornton@lsst.org>
 
