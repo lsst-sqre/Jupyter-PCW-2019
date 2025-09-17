@@ -50,8 +50,9 @@ jobs:
         run: make site
 
       - name: Export to gh-pages
-        # Only on push to main
-        if: (github.event_name == 'push' && github.ref_name == 'main')
+        # Only on push to main, and not even then until we figure out
+        # the pages/static content story
+        if: (github.event_name == 'push' && github.ref_name == 'main' && '5lights' == '4lights')
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
