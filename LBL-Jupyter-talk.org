@@ -1,8 +1,14 @@
+#+REVEAL_ROOT: https://cdn.jsdelivr.net/npm/reveal.js
 #+OPTIONS: toc:nil num:nil
-#+REVEAL_ROOT: https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.9.2
 #+REVEAL_HLEVEL: 2
 #+REVEAL_THEME: white
-#+REVEAL_EXTRA_CSS: ./local.css
+#+REVEAL_EXTRA_CSS: ./css/local.css
+#+REVEAL_INIT_OPTIONS: slideNumber: "h/v"
+#+LATEX_COMPILER: lualatex
+#+LATEX_CLASS_OPTIONS: [10pt]
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \setsansfont{Verdana}
+#+LATEX_HEADER: \setmainfont{Verdana}
 #+AUTHOR: Adam Thornton
 #+EMAIL: athornton@lsst.org
 #+TITLE: Tech Dive: Jupyter at LSST
@@ -362,7 +368,7 @@ in Kubernetes).
 
 * Questions
 
-[[https://athornton.github.io/Jupyter-PCW-2019][This talk]]: https://athornton.github.io/Jupyter-PCW-2019.
+[[https://athornton.github.io/Jupyter-PCW-2019][This talk]]: https://athornton.github.io/Jupyter-PCW-2019.  ([[./Jupyter-PCW-2019.pdf][PDF]])
 
 Adam Thornton <athornton@lsst.org>
 
